@@ -29,13 +29,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        {/* Google AdSense — ganti ca-pub-XXXXXXXXXXXXXXXX dengan Publisher ID Anda */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3555135595404080" crossorigin="anonymous"></script>
       </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
