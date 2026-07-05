@@ -4,215 +4,225 @@ import { login, type AuthState } from "@/app/actions/auth";
 import Link from "next/link";
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+
+// ─── Theme ───────────────────────────────────────────────────────────────────
+const T = {
+    bg: "#060608",
+    card: "#0c0c0f",
+    border: "rgba(220,38,38,0.25)",
+    borderFocus: "rgba(220,38,38,0.7)",
+    red: "#dc2626",
+    redGlow: "rgba(220,38,38,0.15)",
+    redBright: "#ef4444",
+    text: "#ffffff",
+    muted: "#9ca3af",
+    inputBg: "rgba(255,255,255,0.03)",
+};
+
+function GoogleButton({ label }: { label: string }) {
+    const [loading, setLoading] = useState(false);
+
+    const handleGoogle = async () => {
+        setLoading(true);
+        const supabase = createClient();
+        await supabase.auth.signInWithOAuth({
+            provider: "google",
+            options: {
+                redirectTo: `${window.location.origin}/api/auth/callback`,
+            },
+        });
+        setLoading(false);
+    };
+
+    return (
+        <button
+            type="button"
+            onClick={handleGoogle}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+            style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: T.text,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
+        >
+            {loading ? (
+                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+            ) : (
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+            )}
+            {loading ? "Redirecting..." : label}
+        </button>
+    );
+}
 
 function LoginMessage() {
-  const params = useSearchParams();
-  const message = params.get("message");
-  if (!message) return null;
-  return (
-    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 text-emerald-400 text-sm text-center mb-4">
-      {message}
-    </div>
-  );
+    const params = useSearchParams();
+    const message = params.get("message");
+    const error = params.get("error");
+    if (!message && !error) return null;
+    return (
+        <div className={`px-4 py-3 rounded-xl text-sm text-center mb-4 border ${error
+            ? "text-red-400 border-red-500/30 bg-red-500/10"
+            : "text-green-400 border-green-500/30 bg-green-500/10"}`}>
+            {message ?? (error === "auth_callback_failed" ? "Authentication failed. Try again." : error)}
+        </div>
+    );
 }
 
 function LoginForm() {
-  const [state, action, pending] = useActionState<AuthState, FormData>(
-    login,
-    undefined
-  );
+    const [state, action, pending] = useActionState<AuthState, FormData>(login, undefined);
+    const [focused, setFocused] = useState<string | null>(null);
 
-  return (
-    <form action={action} className="space-y-5">
-      <div>
-        <label
-          htmlFor="login-email"
-          className="block text-sm font-medium text-slate-300 mb-2"
-        >
-          Email
-        </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-            </svg>
-          </span>
-          <input
-            id="login-email"
-            name="email"
-            type="email"
-            required
-            placeholder="analyst@nulvex.io"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all text-sm"
-          />
-        </div>
-      </div>
+    const inputStyle = (field: string) => ({
+        background: T.inputBg,
+        border: `1px solid ${focused === field ? T.borderFocus : T.border}`,
+        color: T.text,
+        outline: "none",
+        transition: "border-color 0.2s",
+    });
 
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <label
-            htmlFor="login-password"
-            className="block text-sm font-medium text-slate-300"
-          >
-            Password
-          </label>
-          <span className="text-xs text-cyan-400 hover:text-cyan-300 cursor-pointer transition-colors">
-            Forgot password?
-          </span>
-        </div>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-          </span>
-          <input
-            id="login-password"
-            name="password"
-            type="password"
-            required
-            placeholder="••••••••"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all text-sm"
-          />
-        </div>
-      </div>
+    return (
+        <form action={action} className="space-y-4">
+            <div>
+                <label htmlFor="login-email" className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: T.muted }}>
+                    Email Address
+                </label>
+                <input
+                    id="login-email" name="email" type="email" required
+                    placeholder="operative@nulvex.io"
+                    onFocus={() => setFocused("email")}
+                    onBlur={() => setFocused(null)}
+                    className="w-full rounded-xl px-4 py-3 text-sm placeholder-gray-600 font-mono"
+                    style={inputStyle("email")}
+                />
+            </div>
 
-      {state?.error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 text-red-400 text-sm flex items-center gap-2">
-          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          {state.error}
-        </div>
-      )}
+            <div>
+                <div className="flex items-center justify-between mb-2">
+                    <label htmlFor="login-password" className="text-xs font-semibold uppercase tracking-widest" style={{ color: T.muted }}>
+                        Password
+                    </label>
+                    <Link href="/forgot-password" className="text-xs transition-colors" style={{ color: T.redBright }}
+                        onMouseEnter={e => { (e.target as HTMLElement).style.opacity = "0.7"; }}
+                        onMouseLeave={e => { (e.target as HTMLElement).style.opacity = "1"; }}>
+                        Forgot password?
+                    </Link>
+                </div>
+                <input
+                    id="login-password" name="password" type="password" required
+                    placeholder="••••••••••••"
+                    onFocus={() => setFocused("password")}
+                    onBlur={() => setFocused(null)}
+                    className="w-full rounded-xl px-4 py-3 text-sm placeholder-gray-600 font-mono"
+                    style={inputStyle("password")}
+                />
+            </div>
 
-      <button
-        id="login-submit"
-        type="submit"
-        disabled={pending}
-        className="w-full bg-gradient-to-r from-cyan-500 to-violet-600 hover:from-cyan-400 hover:to-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:scale-[1.01] active:scale-[0.99] text-sm mt-2"
-      >
-        {pending ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            Authenticating...
-          </span>
-        ) : (
-          "Sign In"
-        )}
-      </button>
-    </form>
-  );
+            {state?.error && (
+                <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-sm" style={{ background: T.redGlow, border: `1px solid ${T.border}`, color: T.redBright }}>
+                    <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {state.error}
+                </div>
+            )}
+
+            <button
+                id="login-submit" type="submit" disabled={pending}
+                className="w-full py-3 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                style={{
+                    background: pending ? "rgba(220,38,38,0.5)" : "linear-gradient(135deg, #dc2626, #991b1b)",
+                    color: "#fff",
+                    boxShadow: pending ? "none" : "0 0 24px rgba(220,38,38,0.4)",
+                }}>
+                {pending ? (
+                    <span className="flex items-center justify-center gap-2">
+                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Authenticating...
+                    </span>
+                ) : "Sign In →"}
+            </button>
+
+            <div className="flex items-center gap-3 py-1">
+                <div className="flex-1 h-px" style={{ background: T.border }} />
+                <span className="text-xs" style={{ color: T.muted }}>or continue with</span>
+                <div className="flex-1 h-px" style={{ background: T.border }} />
+            </div>
+
+            <GoogleButton label="Sign in with Google" />
+        </form>
+    );
 }
 
 export default function LoginPage() {
-  return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #030712 0%, #0d1117 50%, #060b14 100%)" }}
-    >
-      {/* Animated background blobs */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, #06b6d4, transparent)" }}
-        />
-        <div
-          className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full opacity-15 blur-3xl"
-          style={{ background: "radial-gradient(circle, #7c3aed, transparent)" }}
-        />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5 blur-3xl"
-          style={{ background: "radial-gradient(circle, #3b82f6, transparent)" }}
-        />
-        {/* Grid lines */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(6,182,212,1) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,1) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
+    return (
+        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style={{ background: T.bg }}>
+            {/* Background */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-[0.07] blur-[120px]" style={{ background: "radial-gradient(circle, #dc2626, transparent)" }} />
+                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[100px]" style={{ background: "radial-gradient(circle, #dc2626, transparent)" }} />
+                {/* Grid */}
+                <div className="absolute inset-0 opacity-[0.04]" style={{
+                    backgroundImage: "linear-gradient(rgba(220,38,38,1) 1px, transparent 1px), linear-gradient(90deg, rgba(220,38,38,1) 1px, transparent 1px)",
+                    backgroundSize: "60px 60px",
+                }} />
+                {/* Scan line */}
+                <div className="absolute top-0 left-0 w-full h-1" style={{ background: "linear-gradient(90deg, transparent, #dc2626, transparent)", animation: "none", opacity: 0.6 }} />
+            </div>
 
-      <div className="relative w-full max-w-md">
-        {/* Logo / Branding */}
-        <div className="text-center mb-8">
-          <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 shadow-2xl"
-            style={{
-              background: "linear-gradient(135deg, #06b6d4, #7c3aed)",
-              boxShadow: "0 0 40px rgba(6,182,212,0.3)",
-            }}
-          >
-            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-          </div>
-          <h1
-            className="text-3xl font-black tracking-widest"
-            style={{ background: "linear-gradient(90deg, #06b6d4, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-          >
-            NULVEX
-          </h1>
-          <p className="text-slate-500 mt-1 text-xs tracking-wider uppercase">
-            Cybersecurity Intelligence Platform
-          </p>
+            <div className="relative w-full max-w-md">
+                {/* Logo */}
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{ background: "linear-gradient(135deg, #1a0000, #dc2626)", border: "1px solid rgba(220,38,38,0.5)", boxShadow: "0 0 48px rgba(220,38,38,0.3)" }}>
+                        <svg className="w-8 h-8" style={{ color: "#fff" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <h1 className="text-3xl font-black tracking-[0.2em] uppercase" style={{ color: T.text }}>
+                        NUL<span style={{ color: T.redBright }}>VEX</span>
+                    </h1>
+                    <p className="text-xs tracking-[0.3em] uppercase mt-1" style={{ color: T.muted }}>Cybersecurity Intelligence</p>
+                </div>
+
+                {/* Card */}
+                <div className="rounded-2xl p-8" style={{ background: T.card, border: `1px solid ${T.border}`, boxShadow: "0 32px 64px rgba(0,0,0,0.8), 0 0 0 1px rgba(220,38,38,0.1) inset" }}>
+                    <div className="mb-6">
+                        <p className="text-[10px] font-mono uppercase tracking-widest mb-1" style={{ color: T.redBright }}>// ACCESS_TERMINAL</p>
+                        <h2 className="text-xl font-bold" style={{ color: T.text }}>Secure Login</h2>
+                        <p className="text-sm mt-1" style={{ color: T.muted }}>Enter credentials to authenticate</p>
+                    </div>
+
+                    <Suspense fallback={null}><LoginMessage /></Suspense>
+                    <Suspense fallback={null}><LoginForm /></Suspense>
+
+                    <p className="text-center text-sm mt-6" style={{ color: T.muted }}>
+                        No account?{" "}
+                        <Link href="/register" className="font-semibold transition-colors" style={{ color: T.redBright }}>
+                            Create one →
+                        </Link>
+                    </p>
+                </div>
+
+                <p className="text-center text-xs mt-4" style={{ color: "rgba(156,163,175,0.4)" }}>
+                    Protected by Nulvex Security © {new Date().getFullYear()}
+                </p>
+            </div>
         </div>
-
-        {/* Card */}
-        <div
-          className="rounded-2xl p-8 shadow-2xl"
-          style={{
-            background: "rgba(255,255,255,0.04)",
-            backdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
-          }}
-        >
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-white">Welcome back</h2>
-            <p className="text-slate-400 text-sm mt-1">Sign in to access your dashboard</p>
-          </div>
-
-          <Suspense>
-            <LoginMessage />
-          </Suspense>
-
-          <Suspense>
-            <LoginForm />
-          </Suspense>
-
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-slate-500 text-xs">OR</span>
-            <div className="flex-1 h-px bg-white/10" />
-          </div>
-
-          <div className="text-center">
-            <p className="text-slate-400 text-sm">
-              No account yet?{" "}
-              <Link
-                href="/register"
-                className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
-              >
-                Create one
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <p className="text-center text-slate-600 text-xs mt-6">
-          Protected by Nulvex Security © {new Date().getFullYear()}
-        </p>
-      </div>
-    </div>
-  );
+    );
 }

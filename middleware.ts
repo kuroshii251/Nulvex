@@ -34,6 +34,7 @@ export async function middleware(request: NextRequest) {
   const authPages = ["/login", "/register"];
   const isAuthPage = authPages.includes(pathname);
   const isDashboard = pathname.startsWith("/dashboard");
+  const isWriteupNew = pathname.startsWith("/writeup/new");
 
   // Not logged in → protect dashboard
   if (!user && isDashboard) {
@@ -42,10 +43,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Not logged in → protect writeup editor
+  if (!user && isWriteupNew) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
   // Logged in → redirect away from auth pages
   if (user && isAuthPage) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/";
     return NextResponse.redirect(url);
   }
 

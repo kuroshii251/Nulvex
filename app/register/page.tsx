@@ -3,274 +3,216 @@
 import { signup, type AuthState } from "@/app/actions/auth";
 import Link from "next/link";
 import { useActionState, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+
+const T = {
+    bg: "#060608",
+    card: "#0c0c0f",
+    border: "rgba(220,38,38,0.25)",
+    borderFocus: "rgba(220,38,38,0.7)",
+    red: "#dc2626",
+    redGlow: "rgba(220,38,38,0.12)",
+    redBright: "#ef4444",
+    text: "#ffffff",
+    muted: "#9ca3af",
+    inputBg: "rgba(255,255,255,0.03)",
+};
 
 function PasswordStrength({ password }: { password: string }) {
-  const checks = [
-    { label: "8+ characters", ok: password.length >= 8 },
-    { label: "Uppercase letter", ok: /[A-Z]/.test(password) },
-    { label: "Number", ok: /[0-9]/.test(password) },
-    { label: "Special character", ok: /[^a-zA-Z0-9]/.test(password) },
-  ];
-  const score = checks.filter((c) => c.ok).length;
-  const colors = ["bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-emerald-500"];
-  const labels = ["Weak", "Fair", "Good", "Strong"];
+    if (!password) return null;
+    const checks = [
+        { label: "8+ characters", ok: password.length >= 8 },
+        { label: "Uppercase", ok: /[A-Z]/.test(password) },
+        { label: "Number", ok: /[0-9]/.test(password) },
+        { label: "Symbol", ok: /[^a-zA-Z0-9]/.test(password) },
+    ];
+    const score = checks.filter(c => c.ok).length;
+    const scoreColors = ["#ef4444", "#f97316", "#eab308", "#22c55e"];
+    const scoreLabel = ["Weak", "Fair", "Good", "Strong"];
+    return (
+        <div className="mt-2 space-y-2">
+            <div className="flex gap-1">
+                {[0, 1, 2, 3].map(i => (
+                    <div key={i} className="h-1 flex-1 rounded-full transition-all duration-300" style={{ background: i < score ? scoreColors[score - 1] : "rgba(255,255,255,0.08)" }} />
+                ))}
+            </div>
+            <div className="flex items-center justify-between">
+                <span className="text-xs" style={{ color: score > 0 ? scoreColors[score - 1] : T.muted }}>{scoreLabel[Math.max(0, score - 1)]}</span>
+                <div className="flex gap-2">
+                    {checks.map(c => (
+                        <span key={c.label} className="text-[10px]" style={{ color: c.ok ? "#22c55e" : "rgba(156,163,175,0.4)" }}>{c.ok ? "✓" : "·"} {c.label}</span>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
 
-  if (!password) return null;
-
-  return (
-    <div className="mt-2 space-y-2">
-      <div className="flex gap-1">
-        {[0, 1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-              i < score ? colors[score - 1] : "bg-white/10"
-            }`}
-          />
-        ))}
-      </div>
-      <p className={`text-xs ${score === 0 ? "text-slate-500" : score < 3 ? "text-orange-400" : "text-emerald-400"}`}>
-        {password ? labels[Math.max(0, score - 1)] : ""}
-      </p>
-    </div>
-  );
+function GoogleButton() {
+    const [loading, setLoading] = useState(false);
+    const handleGoogle = async () => {
+        setLoading(true);
+        const supabase = createClient();
+        await supabase.auth.signInWithOAuth({
+            provider: "google",
+            options: { redirectTo: `${window.location.origin}/api/auth/callback` },
+        });
+        setLoading(false);
+    };
+    return (
+        <button type="button" onClick={handleGoogle} disabled={loading}
+            className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.01] disabled:opacity-50"
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: T.text }}>
+            {loading ? (
+                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+            ) : (
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+            )}
+            {loading ? "Redirecting..." : "Continue with Google"}
+        </button>
+    );
 }
 
 function RegisterForm() {
-  const [state, action, pending] = useActionState<AuthState, FormData>(
-    signup,
-    undefined
-  );
-  const [password, setPassword] = useState("");
+    const [state, action, pending] = useActionState<AuthState, FormData>(signup, undefined);
+    const [password, setPassword] = useState("");
+    const [focused, setFocused] = useState<string | null>(null);
 
-  return (
-    <form action={action} className="space-y-4">
-      {/* Username */}
-      <div>
-        <label htmlFor="reg-username" className="block text-sm font-medium text-slate-300 mb-2">
-          Username
-        </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-          </span>
-          <input
-            id="reg-username"
-            name="username"
-            type="text"
-            required
-            minLength={3}
-            placeholder="analyst_01"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all text-sm"
-          />
-        </div>
-      </div>
+    const inputStyle = (field: string) => ({
+        background: T.inputBg,
+        border: `1px solid ${focused === field ? T.borderFocus : T.border}`,
+        color: T.text,
+        outline: "none",
+        transition: "border-color 0.2s",
+    });
 
-      {/* Email */}
-      <div>
-        <label htmlFor="reg-email" className="block text-sm font-medium text-slate-300 mb-2">
-          Email
-        </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-            </svg>
-          </span>
-          <input
-            id="reg-email"
-            name="email"
-            type="email"
-            required
-            placeholder="analyst@nulvex.io"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all text-sm"
-          />
-        </div>
-      </div>
+    const fields = [
+        { id: "reg-username", name: "username", type: "text", label: "Username", placeholder: "operative_01", required: true, minLength: 3 },
+        { id: "reg-email", name: "email", type: "email", label: "Email Address", placeholder: "operative@nulvex.io", required: true },
+    ];
 
-      {/* Password */}
-      <div>
-        <label htmlFor="reg-password" className="block text-sm font-medium text-slate-300 mb-2">
-          Password
-        </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-          </span>
-          <input
-            id="reg-password"
-            name="password"
-            type="password"
-            required
-            minLength={8}
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all text-sm"
-          />
-        </div>
-        <PasswordStrength password={password} />
-      </div>
+    return (
+        <form action={action} className="space-y-4">
+            {fields.map(f => (
+                <div key={f.id}>
+                    <label htmlFor={f.id} className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: T.muted }}>{f.label}</label>
+                    <input id={f.id} name={f.name} type={f.type} required={f.required} minLength={f.minLength}
+                        placeholder={f.placeholder}
+                        onFocus={() => setFocused(f.id)} onBlur={() => setFocused(null)}
+                        className="w-full rounded-xl px-4 py-3 text-sm placeholder-gray-600 font-mono"
+                        style={inputStyle(f.id)} />
+                </div>
+            ))}
 
-      {/* Confirm Password */}
-      <div>
-        <label htmlFor="reg-confirm" className="block text-sm font-medium text-slate-300 mb-2">
-          Confirm Password
-        </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-          </span>
-          <input
-            id="reg-confirm"
-            name="confirmPassword"
-            type="password"
-            required
-            placeholder="••••••••"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all text-sm"
-          />
-        </div>
-      </div>
+            <div>
+                <label htmlFor="reg-password" className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: T.muted }}>Password</label>
+                <input id="reg-password" name="password" type="password" required minLength={8}
+                    placeholder="••••••••••••"
+                    value={password} onChange={e => setPassword(e.target.value)}
+                    onFocus={() => setFocused("password")} onBlur={() => setFocused(null)}
+                    className="w-full rounded-xl px-4 py-3 text-sm placeholder-gray-600 font-mono"
+                    style={inputStyle("password")} />
+                <PasswordStrength password={password} />
+            </div>
 
-      {state?.error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 text-red-400 text-sm flex items-center gap-2">
-          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          {state.error}
-        </div>
-      )}
+            <div>
+                <label htmlFor="reg-confirm" className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: T.muted }}>Confirm Password</label>
+                <input id="reg-confirm" name="confirmPassword" type="password" required placeholder="••••••••••••"
+                    onFocus={() => setFocused("confirm")} onBlur={() => setFocused(null)}
+                    className="w-full rounded-xl px-4 py-3 text-sm placeholder-gray-600 font-mono"
+                    style={inputStyle("confirm")} />
+            </div>
 
-      <button
-        id="register-submit"
-        type="submit"
-        disabled={pending}
-        className="w-full font-semibold py-3 rounded-xl transition-all duration-200 text-white text-sm mt-2 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
-        style={{
-          background: "linear-gradient(135deg, #06b6d4, #7c3aed)",
-          boxShadow: "0 8px 32px rgba(6,182,212,0.2)",
-        }}
-      >
-        {pending ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            Creating account...
-          </span>
-        ) : (
-          "Create Account"
-        )}
-      </button>
-    </form>
-  );
+            {state?.error && (
+                <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-sm" style={{ background: T.redGlow, border: `1px solid ${T.border}`, color: T.redBright }}>
+                    <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {state.error}
+                </div>
+            )}
+
+            <button id="register-submit" type="submit" disabled={pending}
+                className="w-full py-3 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                style={{
+                    background: pending ? "rgba(220,38,38,0.5)" : "linear-gradient(135deg, #dc2626, #991b1b)",
+                    color: "#fff",
+                    boxShadow: pending ? "none" : "0 0 24px rgba(220,38,38,0.35)",
+                }}>
+                {pending ? (
+                    <span className="flex items-center justify-center gap-2">
+                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Creating account...
+                    </span>
+                ) : "Create Account →"}
+            </button>
+
+            <div className="flex items-center gap-3 py-1">
+                <div className="flex-1 h-px" style={{ background: T.border }} />
+                <span className="text-xs" style={{ color: T.muted }}>or</span>
+                <div className="flex-1 h-px" style={{ background: T.border }} />
+            </div>
+
+            <GoogleButton />
+        </form>
+    );
 }
 
 export default function RegisterPage() {
-  return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #030712 0%, #0d1117 50%, #060b14 100%)" }}
-    >
-      {/* Background effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute -top-40 -left-40 w-96 h-96 rounded-full opacity-20 blur-3xl"
-          style={{ background: "radial-gradient(circle, #7c3aed, transparent)" }}
-        />
-        <div
-          className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full opacity-15 blur-3xl"
-          style={{ background: "radial-gradient(circle, #06b6d4, transparent)" }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(124,58,237,1) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,1) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
+    return (
+        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style={{ background: T.bg }}>
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-[0.06] blur-[120px]" style={{ background: "radial-gradient(circle, #dc2626, transparent)" }} />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full opacity-[0.04] blur-[100px]" style={{ background: "radial-gradient(circle, #dc2626, transparent)" }} />
+                <div className="absolute inset-0 opacity-[0.04]" style={{
+                    backgroundImage: "linear-gradient(rgba(220,38,38,1) 1px, transparent 1px), linear-gradient(90deg, rgba(220,38,38,1) 1px, transparent 1px)",
+                    backgroundSize: "60px 60px",
+                }} />
+            </div>
 
-      <div className="relative w-full max-w-md">
-        {/* Branding */}
-        <div className="text-center mb-8">
-          <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4"
-            style={{
-              background: "linear-gradient(135deg, #7c3aed, #06b6d4)",
-              boxShadow: "0 0 40px rgba(124,58,237,0.3)",
-            }}
-          >
-            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-            </svg>
-          </div>
-          <h1
-            className="text-3xl font-black tracking-widest"
-            style={{
-              background: "linear-gradient(90deg, #a78bfa, #06b6d4)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            NULVEX
-          </h1>
-          <p className="text-slate-500 mt-1 text-xs tracking-wider uppercase">
-            Join the Intelligence Network
-          </p>
+            <div className="relative w-full max-w-md">
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{ background: "linear-gradient(135deg, #1a0000, #dc2626)", border: "1px solid rgba(220,38,38,0.5)", boxShadow: "0 0 48px rgba(220,38,38,0.25)" }}>
+                        <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                    </div>
+                    <h1 className="text-3xl font-black tracking-[0.2em] uppercase" style={{ color: T.text }}>
+                        NUL<span style={{ color: T.redBright }}>VEX</span>
+                    </h1>
+                    <p className="text-xs tracking-[0.3em] uppercase mt-1" style={{ color: T.muted }}>Join the Intelligence Network</p>
+                </div>
+
+                <div className="rounded-2xl p-8" style={{ background: T.card, border: `1px solid ${T.border}`, boxShadow: "0 32px 64px rgba(0,0,0,0.8), 0 0 0 1px rgba(220,38,38,0.08) inset" }}>
+                    <div className="mb-6">
+                        <p className="text-[10px] font-mono uppercase tracking-widest mb-1" style={{ color: T.redBright }}>// NEW_OPERATIVE_REGISTRATION</p>
+                        <h2 className="text-xl font-bold" style={{ color: T.text }}>Create Account</h2>
+                        <p className="text-sm mt-1" style={{ color: T.muted }}>Register to access threat intelligence</p>
+                    </div>
+
+                    <RegisterForm />
+
+                    <p className="text-center text-sm mt-6" style={{ color: T.muted }}>
+                        Already have an account?{" "}
+                        <Link href="/login" className="font-semibold" style={{ color: T.redBright }}>Sign in →</Link>
+                    </p>
+                </div>
+
+                <p className="text-center text-xs mt-4" style={{ color: "rgba(156,163,175,0.4)" }}>
+                    Protected by Nulvex Security © {new Date().getFullYear()}
+                </p>
+            </div>
         </div>
-
-        {/* Card */}
-        <div
-          className="rounded-2xl p-8 shadow-2xl"
-          style={{
-            background: "rgba(255,255,255,0.04)",
-            backdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 25px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
-          }}
-        >
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-white">Create Account</h2>
-            <p className="text-slate-400 text-sm mt-1">
-              Join Nulvex and access threat intelligence
-            </p>
-          </div>
-
-          <RegisterForm />
-
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-slate-500 text-xs">OR</span>
-            <div className="flex-1 h-px bg-white/10" />
-          </div>
-
-          <div className="text-center">
-            <p className="text-slate-400 text-sm">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
-              >
-                Sign in
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        <p className="text-center text-slate-600 text-xs mt-6">
-          Protected by Nulvex Security © {new Date().getFullYear()}
-        </p>
-      </div>
-    </div>
-  );
+    );
 }
