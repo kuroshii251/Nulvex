@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { X, ExternalLink, ShieldAlert, Tag, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import AdModal from "@/components/ads/AdModal";
 
 type Affected = {
     vendor: string;
@@ -78,6 +79,7 @@ export default function Cvess() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selected, setSelected] = useState<Cve | null>(null);
+    const [adTarget, setAdTarget] = useState<Cve | null>(null);
 
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
@@ -212,7 +214,7 @@ export default function Cvess() {
                         {cves.map((item) => (
                             <button
                                 key={item.id}
-                                onClick={() => setSelected(item)}
+                                onClick={() => setAdTarget(item)}
                                 className="text-left block rounded-xl border p-4 transition-colors hover:border-cyan-400/40 cursor-pointer"
                                 style={{ background: "#0a1019", borderColor: "rgba(76,150,255,0.14)" }}
                             >
@@ -285,6 +287,16 @@ export default function Cvess() {
                         </button>
                     </div>
                 </>
+            )}
+
+            {/* ── Ad interstitial (muncul sebelum detail CVE) ── */}
+            {adTarget && (
+                <AdModal
+                    onDone={() => {
+                        setSelected(adTarget);
+                        setAdTarget(null);
+                    }}
+                />
             )}
 
             {/* ── Modal ── */}

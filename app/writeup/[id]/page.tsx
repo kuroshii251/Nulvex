@@ -7,6 +7,7 @@ import { Clock, User, Tag, ArrowLeft, Calendar, PenLine, Eye } from "lucide-reac
 import DeletePostButton from "@/components/writeup/DeletePostButton";
 import PostActions from "@/components/writeup/PostActions";
 import ViewTracker from "@/components/writeup/ViewTracker";
+import WriteupAdGate from "@/components/ads/WriteupAdGate";
 
 const C = {
   bg: "#05070a",
@@ -115,7 +116,8 @@ export default async function WriteupDetailPage({
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-20 pb-24" style={{ background: C.bg }}>
+      <WriteupAdGate>
+        <main className="min-h-screen pt-20 pb-24" style={{ background: C.bg }}>
         <article className="mx-auto max-w-2xl px-4 sm:px-6">
 
           {/* ── Back link ── */}
@@ -267,6 +269,7 @@ export default async function WriteupDetailPage({
           .prose-render em { color:#8494a8; }
         `}</style>
       </main>
+      </WriteupAdGate>
     </>
   );
 }
