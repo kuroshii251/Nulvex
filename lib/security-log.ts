@@ -8,7 +8,8 @@ export type SecurityEventType =
     | "admin_access_denied"
     | "admin_access_granted"
     | "logout"
-    | "password_reset_request";
+    | "password_reset_request"
+    | "account_deleted";
 
 export async function logSecurityEvent(
     eventType: SecurityEventType,
