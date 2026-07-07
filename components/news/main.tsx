@@ -31,7 +31,7 @@ function NewsCard() {
                 const data = await res.json();
                 setNews(data);
             } catch (err) {
-                setError("SIGNAL LOST — couldn't reach the feed.");
+                setError("Couldn't reach the news.");
             } finally {
                 setLoading(false);
             }
@@ -74,8 +74,8 @@ function NewsCard() {
 
     if (error) {
         return (
-            <div className="rounded-md border border-red-500/30 bg-red-500/5 p-6 text-center font-mono text-sm text-red-400">
-                {"// "}{error}
+            <div className="rounded-md p-6 text-center font-mono text-sm text-red-400">
+                {error}
             </div>
         );
     }

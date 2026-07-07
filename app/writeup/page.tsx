@@ -3,26 +3,27 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import PostCard, { type Post } from "@/components/writeup/PostCard";
 import { PenLine, Rss } from "lucide-react";
+import Footer from "@/components/footer/main";
 
-export const metadata = {
-  title: "Writeup — Nulvex",
-  description: "Community security writeups, CTF solutions, and vulnerability research.",
-};
 
 export default async function WriteupPage() {
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: posts } = await supabase
+  const { data: posts, error } = await supabase
     .from("writeup_posts")
     .select(`
-    id, title, cover_image, tags, author_username, read_time, views, created_at,
+    id, title, cover_image, tags, author_username, author_avatar_url, read_time, views, created_at,
     writeup_likes(count),
     writeup_comments(count)
   `)
     .eq("published", true)
     .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching writeups:", error);
+  }
 
   const typedPosts: Post[] = (posts ?? []).map((p: any) => ({
     ...p,
@@ -46,24 +47,17 @@ export default async function WriteupPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           <div
-            className="mb-10 pb-6 border-b flex items-start justify-between gap-4"
-            style={{ borderColor: "rgba(76,150,255,0.14)" }}
+            className="mb-10 pb-6 flex items-start justify-between gap-4"
           >
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-white">
-                Write<span style={{ color: "#00e5ff" }}>Up</span>
-                <span style={{ color: "#ff4463" }}>.</span>
-              </h1>
-              <p className="mt-2 max-w-xl text-sm" style={{ color: "#66768a" }}>
-                CTF solutions, vulnerability research, and security deep-dives from the community.
-              </p>
+
             </div>
 
             {user && (
               <Link
                 href="/writeup/new"
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all hover:-translate-y-0.5 flex-shrink-0"
-                style={{ background: "#00e5ff", color: "#000" }}
+                style={{ background: "red", color: "#000" }}
               >
                 <PenLine size={14} />
                 New Post
@@ -73,7 +67,7 @@ export default async function WriteupPage() {
 
           {/* ── Post Grid ── */}
           {typedPosts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:w-120 place-content-center mx-auto gap-5">
               {typedPosts.map((post) => (
                 <PostCard
                   key={post.id}
@@ -117,7 +111,12 @@ export default async function WriteupPage() {
             </div>
           )}
         </div>
+        <div className="bg-black">
+          <Footer />
+
+        </div>
       </main>
+
     </>
   );
 }

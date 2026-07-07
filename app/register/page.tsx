@@ -4,6 +4,8 @@ import { signup, type AuthState } from "@/app/actions/auth";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import logo from "../../public/logo.png";
+import Image from "next/image";
 
 const T = {
     bg: "#060608",
@@ -12,7 +14,6 @@ const T = {
     borderFocus: "rgba(220,38,38,0.7)",
     red: "#dc2626",
     redGlow: "rgba(220,38,38,0.12)",
-    redBright: "#ef4444",
     text: "#ffffff",
     muted: "#9ca3af",
     inputBg: "rgba(255,255,255,0.03)",
@@ -95,8 +96,8 @@ function RegisterForm() {
     });
 
     const fields = [
-        { id: "reg-username", name: "username", type: "text", label: "Username", placeholder: "operative_01", required: true, minLength: 3 },
-        { id: "reg-email", name: "email", type: "email", label: "Email Address", placeholder: "operative@nulvex.io", required: true },
+        { id: "reg-username", name: "username", type: "text", label: "Username", placeholder: "anthony", required: true, minLength: 3 },
+        { id: "reg-email", name: "email", type: "email", label: "Email Address", placeholder: "anthony@gmail.com", required: true },
     ];
 
     return (
@@ -132,7 +133,7 @@ function RegisterForm() {
             </div>
 
             {state?.error && (
-                <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-sm" style={{ background: T.redGlow, border: `1px solid ${T.border}`, color: T.redBright }}>
+                <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-sm" style={{ background: T.redGlow, border: `1px solid ${T.border}` }}>
                     <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -144,18 +145,9 @@ function RegisterForm() {
                 className="w-full py-3 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                 style={{
                     background: pending ? "rgba(220,38,38,0.5)" : "linear-gradient(135deg, #dc2626, #991b1b)",
-                    color: "#fff",
-                    boxShadow: pending ? "none" : "0 0 24px rgba(220,38,38,0.35)",
+                    color: "#fff"
                 }}>
-                {pending ? (
-                    <span className="flex items-center justify-center gap-2">
-                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        Creating account...
-                    </span>
-                ) : "Create Account →"}
+                Sign Up
             </button>
 
             <div className="flex items-center gap-3 py-1">
@@ -183,35 +175,26 @@ export default function RegisterPage() {
 
             <div className="relative w-full max-w-md">
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{ background: "linear-gradient(135deg, #1a0000, #dc2626)", border: "1px solid rgba(220,38,38,0.5)", boxShadow: "0 0 48px rgba(220,38,38,0.25)" }}>
-                        <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                        </svg>
-                    </div>
-                    <h1 className="text-3xl font-black tracking-[0.2em] uppercase" style={{ color: T.text }}>
-                        NUL<span style={{ color: T.redBright }}>VEX</span>
-                    </h1>
-                    <p className="text-xs tracking-[0.3em] uppercase mt-1" style={{ color: T.muted }}>Join the Intelligence Network</p>
+
+
                 </div>
 
-                <div className="rounded-2xl p-8" style={{ background: T.card, border: `1px solid ${T.border}`, boxShadow: "0 32px 64px rgba(0,0,0,0.8), 0 0 0 1px rgba(220,38,38,0.08) inset" }}>
+                <div className="rounded-2xl p-8" style={{ background: T.card }}>
                     <div className="mb-6">
-                        <p className="text-[10px] font-mono uppercase tracking-widest mb-1" style={{ color: T.redBright }}>// NEW_OPERATIVE_REGISTRATION</p>
-                        <h2 className="text-xl font-bold" style={{ color: T.text }}>Create Account</h2>
-                        <p className="text-sm mt-1" style={{ color: T.muted }}>Register to access threat intelligence</p>
+                        <div className="flex justify-center items-center w-16 h-16 rounded-2xl mb-4 mx-auto">
+                            <Image src={logo} alt="logo" width={600} height={600} className="object-contain" />
+                        </div>
+                        <h2 className="text-xl text-center font-bold" style={{ color: T.text }}>Create Account</h2>
+                        <p className="text-sm text-center mt-1" style={{ color: T.muted }}>Register to access threat intelligence</p>
                     </div>
 
                     <RegisterForm />
 
                     <p className="text-center text-sm mt-6" style={{ color: T.muted }}>
                         Already have an account?{" "}
-                        <Link href="/login" className="font-semibold" style={{ color: T.redBright }}>Sign in →</Link>
+                        <Link href="/login" className="font-semibold text-red-600">Sign in</Link>
                     </p>
                 </div>
-
-                <p className="text-center text-xs mt-4" style={{ color: "rgba(156,163,175,0.4)" }}>
-                    Protected by Nulvex Security © {new Date().getFullYear()}
-                </p>
             </div>
         </div>
     );

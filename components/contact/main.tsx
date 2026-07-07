@@ -5,7 +5,7 @@ import { Send, CheckCircle2, AlertCircle } from "lucide-react";
 
 // Ganti dengan Form ID Formspree kamu
 const FORMSPREE_ID = "your_form_id";
-const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
+const FORMSPREE_ENDPOINT = `https://formspree.io/f/xjgqjqyo`;
 
 const C = {
     panel: "#0a1019",
@@ -59,10 +59,10 @@ export default function ContactForm() {
                 <CheckCircle2 size={20} style={{ color: C.success }} className="shrink-0 mt-0.5" />
                 <div>
                     <p className="text-sm font-semibold" style={{ color: C.text }}>
-                        Pesan terkirim!
+                        Message sent!
                     </p>
                     <p className="text-xs mt-1" style={{ color: C.muted2 }}>
-                        Terima kasih, aku bakal balas secepatnya ke email kamu.
+                        Thank you, I'll reply to your email soon.
                     </p>
                 </div>
             </div>
@@ -73,13 +73,13 @@ export default function ContactForm() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
                 <label className="block text-xs font-semibold mb-1.5" style={{ color: C.muted2 }}>
-                    Nama
+                    Name
                 </label>
                 <input
                     type="text"
                     name="name"
                     required
-                    placeholder="Nama kamu"
+                    placeholder="Anthony...."
                     className="w-full px-3.5 py-2.5 rounded-lg text-sm outline-none transition-colors border"
                     style={{ background: C.panel, borderColor: C.border, color: C.text }}
                 />
@@ -93,7 +93,7 @@ export default function ContactForm() {
                     type="email"
                     name="email"
                     required
-                    placeholder="kamu@email.com"
+                    placeholder="anthony@email.com"
                     className="w-full px-3.5 py-2.5 rounded-lg text-sm outline-none transition-colors border"
                     style={{ background: C.panel, borderColor: C.border, color: C.text }}
                 />
@@ -101,12 +101,12 @@ export default function ContactForm() {
 
             <div>
                 <label className="block text-xs font-semibold mb-1.5" style={{ color: C.muted2 }}>
-                    Subjek
+                    Subject
                 </label>
                 <input
                     type="text"
                     name="subject"
-                    placeholder="Tentang apa?"
+                    placeholder="Subject..."
                     className="w-full px-3.5 py-2.5 rounded-lg text-sm outline-none transition-colors border"
                     style={{ background: C.panel, borderColor: C.border, color: C.text }}
                 />
@@ -114,13 +114,13 @@ export default function ContactForm() {
 
             <div>
                 <label className="block text-xs font-semibold mb-1.5" style={{ color: C.muted2 }}>
-                    Pesan
+                    Message
                 </label>
                 <textarea
                     name="message"
                     required
                     rows={5}
-                    placeholder="Tulis pesan kamu di sini..."
+                    placeholder="Write your message here..."
                     className="w-full px-3.5 py-2.5 rounded-lg text-sm outline-none transition-colors border resize-none"
                     style={{ background: C.panel, borderColor: C.border, color: C.text }}
                 />
@@ -132,22 +132,22 @@ export default function ContactForm() {
                     style={{ background: "rgba(255,68,99,0.06)", borderColor: "rgba(255,68,99,0.25)", color: C.danger }}
                 >
                     <AlertCircle size={14} className="shrink-0" />
-                    Gagal mengirim pesan. Coba lagi beberapa saat.
+                    Failed to send message. Please try again later.
                 </div>
             )}
 
             <button
                 type="submit"
                 disabled={status === "loading"}
-                className="inline-flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0"
-                style={{ background: C.cyan, color: "#05070a" }}
+                className="inline-flex bg-red-600 items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0"
+                style={{ color: "white" }}
             >
                 {status === "loading" ? (
                     "Mengirim..."
                 ) : (
                     <>
                         <Send size={15} />
-                        Kirim Pesan
+                        Send Message
                     </>
                 )}
             </button>

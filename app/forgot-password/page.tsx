@@ -9,12 +9,15 @@ export default function ForgotPasswordPage() {
     resetPassword,
     undefined
   );
+  const T = {
+    bg: "#060608",
+    
+};
 
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #030712 0%, #0d1117 50%, #060b14 100%)" }}
-    >
+style={{ background: T.bg }}    >
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-20 blur-3xl"
@@ -35,28 +38,6 @@ export default function ForgotPasswordPage() {
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="text-center mb-8">
-          <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 shadow-2xl"
-            style={{
-              background: "linear-gradient(135deg, #06b6d4, #7c3aed)",
-              boxShadow: "0 0 40px rgba(6,182,212,0.3)",
-            }}
-          >
-            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-            </svg>
-          </div>
-          <h1
-            className="text-3xl font-black tracking-widest"
-            style={{ background: "linear-gradient(90deg, #06b6d4, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-          >
-            RESET PASSWORD
-          </h1>
-          <p className="text-slate-500 mt-1 text-xs tracking-wider uppercase">
-            Recover your Nulvex Account
-          </p>
-        </div>
 
         <div
           className="rounded-2xl p-8 shadow-2xl"
@@ -109,7 +90,7 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={pending}
-              className="w-full bg-gradient-to-r from-cyan-500 to-violet-600 hover:from-cyan-400 hover:to-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:scale-[1.01] active:scale-[0.99] text-sm mt-2"
+              className="w-full bg-red-600 text-white font-semibold py-3 rounded-xl text-sm mt-2"
             >
               {pending ? "Sending link..." : "Send Reset Link"}
             </button>
@@ -120,9 +101,6 @@ export default function ForgotPasswordPage() {
               href="/login"
               className="text-slate-400 hover:text-cyan-400 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
               Back to Sign In
             </Link>
           </div>

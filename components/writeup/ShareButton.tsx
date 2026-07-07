@@ -16,7 +16,7 @@ export default function ShareButton({ postId, title }: { postId: string; title: 
       try {
         await navigator.share({ title, url });
       } catch {
-        // user membatalkan share, abaikan
+        // user cancelled share, ignore
       }
       return;
     }

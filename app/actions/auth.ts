@@ -43,24 +43,25 @@ export async function signup(prevState: AuthState, formData: FormData): Promise<
   if (password.length < 8) return { error: "Password must be at least 8 characters." };
   if (password !== confirmPassword) return { error: "Passwords do not match." };
 
-  const { data, error } = await supabase.auth.signUp({
+  // Check if user already exists
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const adminClient = createAdminClient();
+  const { data: usersData } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
+  const existingUser = usersData?.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
+  if (existingUser) {
+    return { error: "Email is already registered. Please sign in instead." };
+  }
+
+  const { error } = await adminClient.auth.admin.createUser({
     email,
     password,
-    options: {
-      data: {
-        username,
-      },
-    },
+    email_confirm: true,
+    user_metadata: { username },
   });
 
   if (error) {
     await logSecurityEvent("login_failed", email, `Signup failed: ${error.message}`);
     return { error: error.message };
-  }
-
-  // If user is already registered, identities will be empty
-  if (data.user && (!data.user.identities || data.user.identities.length === 0)) {
-    return { error: "Email is already registered. Please sign in instead." };
   }
 
   await logSecurityEvent("signup", email);

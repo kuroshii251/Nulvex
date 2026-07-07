@@ -38,18 +38,7 @@ export default function AdModal({ onDone, skipAfter = 5 }: AdModalProps) {
           borderColor: "rgba(76,150,255,0.2)",
         }}
       >
-        {/* ── Progress bar ── */}
-        <div className="w-full h-0.5" style={{ background: "rgba(255,255,255,0.05)" }}>
-          <div
-            className="h-full transition-all duration-1000 ease-linear"
-            style={{
-              width: `${progressPct}%`,
-              background: "linear-gradient(90deg, #00e5ff, #a855f7)",
-            }}
-          />
-        </div>
 
-        {/* ── Header ── */}
         <div
           className="flex items-center justify-between px-5 py-3 border-b"
           style={{ borderColor: "rgba(76,150,255,0.1)" }}
@@ -72,7 +61,7 @@ export default function AdModal({ onDone, skipAfter = 5 }: AdModalProps) {
             <button
               onClick={onDone}
               className="flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full transition-all hover:bg-white/10 active:scale-95"
-              style={{ color: "#00e5ff", border: "1px solid rgba(0,229,255,0.3)" }}
+              style={{ color: "white", border: "1px solid rgba(255,255,255,0.05) " }}
             >
               <X size={12} />
               Skip Ad
@@ -100,7 +89,7 @@ export default function AdModal({ onDone, skipAfter = 5 }: AdModalProps) {
           >
             {countdown > 0
               ? `Content available in ${countdown}s…`
-              : "No thanks, continue to content"}
+              : "Continue to content"}
           </button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 // Server Component wrapper — Header lives here (server only)
+import Footer from "@/components/footer/main";
 import Header from "@/components/header";
 import NewWriteupClient from "@/components/writeup/NewWriteupClient";
 
@@ -12,6 +13,8 @@ export default function NewWriteupPage() {
     <>
       <Header />
       <NewWriteupClient />
+      <Footer/>
+
     </>
   );
 }

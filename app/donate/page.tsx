@@ -1,3 +1,4 @@
+import Footer from "@/components/footer/main";
 import Header from "@/components/header";
 import { Heart, Coffee, ExternalLink } from "lucide-react";
 
@@ -39,7 +40,7 @@ export default function DonatePage() {
                         className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
                         style={{ background: "rgba(255,91,122,0.1)" }}
                     >
-                        <Heart size={26} style={{ color: C.red }} />
+                        <Heart size={26} style={{ color: "red" }} />
                     </div>
 
                     <h1 className="text-2xl font-bold mb-2" style={{ color: C.text }}>
@@ -49,31 +50,30 @@ export default function DonatePage() {
                     <p
                         className="text-sm leading-relaxed mb-8"
                         style={{ color: C.muted2 }}
-                    >
-                        Kalau konten dan writeup di sini membantu kamu, pertimbangkan
-                        untuk traktir kopi. Setiap dukungan sangat berarti buat
-                        keberlangsungan project ini.
+                    >  If any content and writeup here helped you, consider buying me a  coffee. Every support means a lot for keeping this project alive. Thank you!
                     </p>
 
 
                     <a href={TRAKTEER_URL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
+                        className="inline-flex bg-red-600 items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
                         style={{
-                            background: "linear-gradient(135deg, #ff5b7a 0%, #ff8a3d 100%)",
                             color: "#fff",
                         }}>
                         <Coffee size={16} />
-                        Traktir di Trakteer
-                        <ExternalLink size={14} />
+                        Donate
                     </a>
 
-                    <p className="text-[11px] mt-5" style={{ color: C.muted }}>
-                        Kamu akan diarahkan ke halaman Trakteer resmi.
-                    </p>
                 </div>
+
             </main >
+            <div className="bg-black">
+                <Footer />
+
+            </div>
+
         </>
+
     );
 }

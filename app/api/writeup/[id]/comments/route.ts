@@ -10,7 +10,7 @@ export async function GET(
 
   const { data, error } = await supabase
     .from("writeup_comments")
-    .select("id, author_id, author_username, body, created_at")
+    .select("id, author_id, author_username, author_avatar_url, body, created_at")
     .eq("post_id", id)
     .order("created_at", { ascending: true });
 

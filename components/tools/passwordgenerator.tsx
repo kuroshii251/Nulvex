@@ -295,7 +295,7 @@ export default function PasswordGenerator() {
                         </div>
 
                         <div className="text-[10px] text-gray-500 leading-normal bg-gray-900 p-2.5 rounded-lg border border-white/5 mt-3">
-                            <span className="text-red-500 font-bold">Tips:</span> Pakai panjang minimal 16 karakter dan aktifkan semua jenis karakter untuk hasil terbaik. Jangan pakai ulang password di banyak akun — simpan di password manager.
+                            <span className="text-red-500 font-bold">Tips:</span> Use a minimum length of 16 characters and enable all character types for best results. Do not reuse passwords across multiple accounts — store them in a password manager.
                         </div>
                     </div>
 

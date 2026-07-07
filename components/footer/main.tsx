@@ -17,7 +17,7 @@ function Footer() {
             <div className="w-8 h-8 rounded-lg flex items-center justify-center">
               <Image src={logo} alt="logo" width={600} height={600} />
             </div>            <span className="text-lg font-bold tracking-tight text-white uppercase">
-              NULVEX
+              CYDEF
             </span>
           </div>
           <p className="text-xs leading-relaxed" style={{ color: C.muted }}>
@@ -72,7 +72,7 @@ function Footer() {
         className="max-w-7xl mx-auto pt-7 border-t flex flex-col md:flex-row justify-between items-center gap-4 text-[10.5px] font-medium"
         style={{ borderColor: C.border, color: C.muted, fontFamily: "monospace" }}
       >
-        <p>© 2026 NULVEX INTELLIGENCE SYSTEMS. ALL RIGHTS RESERVED.</p>
+        <p>© 2026 Cydef All Right Reserved</p>
       </div>
     </footer>
   );

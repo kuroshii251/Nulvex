@@ -155,7 +155,7 @@ export default function ClickjackingTester() {
                         </div>
 
                         <div className="text-[10px] text-gray-500 leading-normal bg-gray-900 p-2.5 rounded-lg border border-white/5 mt-3">
-                            <span className="text-red-500 font-bold">Analisis Hasil:</span> Jika halaman web target muncul di atas tombol merah (bisa lo geser opacity-nya), web tersebut **Vulnerable**. Jika kotak tetap kosong atau error Refused by X-Frame-Options, web tersebut **Aman**.
+                            <span className="text-red-500 font-bold">Result Analysis:</span> If the target web page appears over the red button (you can slide the opacity), the web is **Vulnerable**. If the frame remains blank or shows a Refused by X-Frame-Options error, the web is **Secure**.
                         </div>
                     </div>
 

@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 export type WriteupState = { error: string } | { success: true; id: string } | undefined;
 
@@ -55,6 +56,7 @@ export async function createPost(
 
   const author_username =
     user.user_metadata?.username ?? user.email?.split("@")[0] ?? "Anonymous";
+  const author_avatar_url = user.user_metadata?.avatar_url ?? null;
 
   const { data, error } = await supabase
     .from("writeup_posts")
@@ -65,6 +67,7 @@ export async function createPost(
       tags,
       author_id: user.id,
       author_username,
+      author_avatar_url,
       read_time: estimateReadTime(content),
       published: true,
     })
@@ -114,11 +117,13 @@ export async function createComment(
 
   const author_username =
     user.user_metadata?.username ?? user.email?.split("@")[0] ?? "Anonymous";
+  const author_avatar_url = user.user_metadata?.avatar_url ?? null;
 
   const { error } = await supabase.from("writeup_comments").insert({
     post_id: postId,
     author_id: user.id,
     author_username,
+    author_avatar_url,
     body,
   });
 
@@ -242,6 +247,10 @@ export async function updateComment(
 
 export async function incrementView(postId: string) {
   const supabase = await createClient();
+  const headersList = await headers();
+  const forwardedFor = headersList.get("x-forwarded-for");
+  const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : (headersList.get("x-real-ip") || "unknown");
+
   // Using an RPC call, this bypasses the need for the user to be the author
-  await supabase.rpc("increment_writeup_views", { post_id: postId });
+  await supabase.rpc("increment_writeup_views", { post_id: postId, client_ip: ip });
 }

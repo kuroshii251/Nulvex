@@ -16,6 +16,11 @@ const C = {
   text: "#e2e8f0",
 };
 
+const T = {
+  bg: "#060608",
+
+};
+
 function UpdatePasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,7 +32,6 @@ function UpdatePasswordForm() {
   const [pending, setPending] = useState(false);
   const [hasSession, setHasSession] = useState<boolean | null>(null);
 
-  // Verify we have an active recovery session before letting user update
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getSession().then(({ data }) => {
@@ -96,7 +100,6 @@ function UpdatePasswordForm() {
     );
   }
 
-  // ─── Update Password Form ─────────────────────────────────────────────────
   return (
     <>
       <div className="mb-6">
@@ -141,7 +144,7 @@ function UpdatePasswordForm() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg text-sm mt-2"
+          className="w-full text-white font-semibold py-3 rounded-xl bg-red-600 shadow-lg text-sm mt-2"
         >
           {pending ? "Updating..." : "Update Password"}
         </button>
@@ -154,8 +157,7 @@ export default function UpdatePasswordPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #030712 0%, #0d1117 50%, #060b14 100%)" }}
-    >
+      style={{ background: T.bg }}    >
       {/* Background decorations */}
       <div className="absolute inset-0 pointer-events-none">
         <div
@@ -173,15 +175,6 @@ export default function UpdatePasswordPage() {
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1
-            className="text-3xl font-black tracking-widest"
-            style={{ background: "linear-gradient(90deg, #06b6d4, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-          >
-            NEW PASSWORD
-          </h1>
-          <p className="text-slate-500 mt-1 text-xs tracking-wider uppercase">Secure your account</p>
-        </div>
 
         <div
           className="rounded-2xl p-8 shadow-2xl"

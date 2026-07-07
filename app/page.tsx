@@ -73,17 +73,17 @@ const Hero = () => (
       </h1>
 
       <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: C.muted2 }}>
-        NULVEX aggregates CVEs, exploit intelligence, threat chatter, and patch
+        Cydef aggregates CVEs, exploit intelligence, threat chatter, and patch
         advisories into a single stream — helping security teams detect faster
         and respond sooner.
       </p>
 
       <div className="flex flex-wrap justify-center gap-4 mt-10">
         <a
-          href="#feed"
+          href="/login"
           className="px-7 py-3.5 rounded-lg text-sm font-bold bg-red-600 transition-all hover:-translate-y-0.5">
 
-          Start Scanning
+          Get Started
         </a>
 
         <a
@@ -91,26 +91,10 @@ const Hero = () => (
           className="px-7 py-3.5 rounded-lg border text-sm font-semibold"
           style={{ borderColor: C.borderStrong, color: C.text }}
         >
-          View Live Feed
+          View More
         </a>
       </div>
 
-      <div className="mt-14 pt-8 border-t flex flex-wrap justify-center gap-12" style={{ borderColor: C.border }}>
-        {[
-          { n: "4,812", l: "Sources Monitored" },
-          { n: "6.2s", l: "Detection Lag" },
-          { n: "99.97%", l: "Feed Uptime" },
-        ].map((item) => (
-          <div key={item.l} className="text-center">
-            <div className="text-2xl font-bold" style={{ color: C.text, fontFamily: "monospace" }}>
-              {item.n}
-            </div>
-            <div className="text-[11px] uppercase tracking-wider mt-1" style={{ color: C.muted }}>
-              {item.l}
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   </section >
 );
@@ -268,7 +252,7 @@ const ToolsSection = () => {
   );
 };
 
-const WhyNulvex = () => {
+const WhyCydef = () => {
   const items = [
     { title: "Real-time updates", desc: "New CVEs and advisories land in the feed within seconds of disclosure." },
     { title: "Verified sources", desc: "Every entry is cross-checked against vendor and NVD data before it's published." },
@@ -325,7 +309,7 @@ export default function Home() {
       <Hero />
       <FeedSection />
       <ToolsSection />
-      <WhyNulvex />
+      <WhyCydef />
       <Banner />
       <Footer />
     </div>

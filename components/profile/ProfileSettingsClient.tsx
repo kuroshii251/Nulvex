@@ -9,8 +9,6 @@ const C = {
   panel: "#0a1019",
   panel2: "#0d1826",
   border: "rgba(76,150,255,0.14)",
-  borderStrong: "rgba(76,150,255,0.35)",
-  cyan: "#00e5ff",
   text: "#e7edf5",
   muted: "#66768a",
   muted2: "#8494a8",
@@ -37,18 +35,17 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
         <h1 className="text-3xl font-bold mb-8" style={{ color: C.text }}>Profile Settings</h1>
 
         <div className="space-y-8">
-          {/* Profile Info Form */}
           <section className="rounded-2xl p-6 border" style={{ background: C.panel, borderColor: C.border }}>
             <h2 className="flex items-center gap-2 text-lg font-bold mb-6" style={{ color: C.text }}>
-              <User size={18} style={{ color: C.cyan }} />
+              <User size={18} style={{ color: "white" }} />
               Profile Information
             </h2>
             <form action={infoAction} className="space-y-5">
               <div className="flex items-start gap-6">
                 <div className="shrink-0">
-                  <div 
-                    className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold uppercase overflow-hidden border-2"
-                    style={{ background: "rgba(0,229,255,0.12)", color: C.cyan, borderColor: C.borderStrong }}
+                  <div
+                    className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold uppercase overflow-hidden"
+                    style={{ background: "rgba(0,229,255,0.12)", color: "white" }}
                   >
                     {avatarPreview ? (
                       <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
@@ -66,7 +63,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
                       type="file"
                       name="avatar_file"
                       accept="image/*"
-                      className="w-full bg-transparent outline-none text-sm border-b py-1 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-cyan-900 file:text-cyan-400 hover:file:bg-cyan-800"
+                      className="w-full bg-transparent outline-none text-sm border-b py-1 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-transparent file:text-white "
                       style={{ color: C.text, borderColor: C.border }}
                       onChange={(e) => {
                         const file = e.target.files?.[0];
@@ -93,7 +90,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
                 <div className="px-3 py-2 rounded-md text-xs" style={{ background: `${C.danger}18`, color: C.danger }}>{infoState.error}</div>
               )}
               {infoState && "success" in infoState && (
-                <div className="px-3 py-2 rounded-md text-xs" style={{ background: `rgba(0,229,255,0.1)`, color: C.cyan }}>{infoState.message}</div>
+                <div className="px-3 py-2 rounded-md text-xs" style={{ background: `rgba(0,229,255,0.1)`, color: "white" }}>{infoState.message}</div>
               )}
 
               <div className="flex justify-end pt-2">
@@ -101,7 +98,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
                   type="submit"
                   disabled={infoPending}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-transform hover:-translate-y-0.5 disabled:opacity-50"
-                  style={{ background: C.panel2, color: C.cyan, border: `1px solid ${C.borderStrong}` }}
+                  style={{ background: C.panel2, color: "white", border: `1px solid white` }}
                 >
                   <Save size={13} />
                   {infoPending ? "Saving..." : "Save Profile"}
@@ -113,7 +110,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
           {/* Email Update Form */}
           <section className="rounded-2xl p-6 border" style={{ background: C.panel, borderColor: C.border }}>
             <h2 className="flex items-center gap-2 text-lg font-bold mb-6" style={{ color: C.text }}>
-              <Mail size={18} style={{ color: C.cyan }} />
+              <Mail size={18} style={{ color: "white" }} />
               Email Address
             </h2>
             <form action={emailAction} className="space-y-5">
@@ -133,7 +130,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
                 <div className="px-3 py-2 rounded-md text-xs" style={{ background: `${C.danger}18`, color: C.danger }}>{emailState.error}</div>
               )}
               {emailState && "success" in emailState && (
-                <div className="px-3 py-2 rounded-md text-xs" style={{ background: `rgba(0,229,255,0.1)`, color: C.cyan }}>{emailState.message}</div>
+                <div className="px-3 py-2 rounded-md text-xs" style={{ background: `rgba(0,229,255,0.1)`, color: "white" }}>{emailState.message}</div>
               )}
 
               <div className="flex justify-end pt-2">
@@ -141,7 +138,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
                   type="submit"
                   disabled={emailPending}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-transform hover:-translate-y-0.5 disabled:opacity-50"
-                  style={{ background: C.panel2, color: C.cyan, border: `1px solid ${C.borderStrong}` }}
+                  style={{ background: C.panel2, color: "white", border: `1px solid white` }}
                 >
                   <Save size={13} />
                   {emailPending ? "Updating..." : "Update Email"}
@@ -153,7 +150,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
           {/* Password Update Form */}
           <section className="rounded-2xl p-6 border" style={{ background: C.panel, borderColor: C.border }}>
             <h2 className="flex items-center gap-2 text-lg font-bold mb-6" style={{ color: C.text }}>
-              <Lock size={18} style={{ color: C.cyan }} />
+              <Lock size={18} style={{ color: "white" }} />
               Password
             </h2>
             <form action={passAction} className="space-y-5">
@@ -184,7 +181,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
                 <div className="px-3 py-2 rounded-md text-xs" style={{ background: `${C.danger}18`, color: C.danger }}>{passState.error}</div>
               )}
               {passState && "success" in passState && (
-                <div className="px-3 py-2 rounded-md text-xs" style={{ background: `rgba(0,229,255,0.1)`, color: C.cyan }}>{passState.message}</div>
+                <div className="px-3 py-2 rounded-md text-xs" style={{ background: `rgba(0,229,255,0.1)`, color: "white" }}>{passState.message}</div>
               )}
 
               <div className="flex justify-end pt-2">
@@ -192,7 +189,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
                   type="submit"
                   disabled={passPending}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-transform hover:-translate-y-0.5 disabled:opacity-50"
-                  style={{ background: C.panel2, color: C.cyan, border: `1px solid ${C.borderStrong}` }}
+                  style={{ background: C.panel2, color: "white", border: `1px solid white` }}
                 >
                   <Save size={13} />
                   {passPending ? "Updating..." : "Update Password"}
@@ -205,7 +202,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
           <section className="rounded-2xl p-6 border" style={{ background: `${C.danger}0a`, borderColor: `${C.danger}44` }}>
             <h2 className="flex items-center gap-2 text-lg font-bold mb-6" style={{ color: C.danger }}>
               <Trash2 size={18} />
-              Danger Zone
+              Delete Account
             </h2>
             <form action={delAction} className="space-y-5">
               <p className="text-sm" style={{ color: C.muted }}>
@@ -234,7 +231,7 @@ export default function ProfileSettingsClient({ user }: { user: ProfileProps }) 
                   type="submit"
                   disabled={delPending}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-transform hover:-translate-y-0.5 disabled:opacity-50"
-                  style={{ background: C.danger, color: "#fff" }}
+                  style={{ background: "red", color: "#fff" }}
                 >
                   <Trash2 size={13} />
                   {delPending ? "Deleting..." : "Delete Account"}

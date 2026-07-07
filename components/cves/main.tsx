@@ -155,7 +155,6 @@ export default function Cvess() {
 
     return (
         <>
-            {/* ── Search bar ── */}
             <form onSubmit={handleSearchSubmit} className="mb-5">
                 <div
                     className="flex items-center gap-2 rounded-xl border px-3 py-2"
@@ -184,7 +183,7 @@ export default function Cvess() {
                     <button
                         type="submit"
                         className="px-3 py-1 rounded-lg text-xs font-semibold transition-colors"
-                        style={{ background: "rgba(0,229,255,0.1)", color: "#00e5ff" }}
+                        style={{ background: "rgba(0,229,255,0.1)", color: "white" }}
                     >
                         Search
                     </button>
@@ -215,7 +214,7 @@ export default function Cvess() {
                             <button
                                 key={item.id}
                                 onClick={() => setAdTarget(item)}
-                                className="text-left block rounded-xl border p-4 transition-colors hover:border-cyan-400/40 cursor-pointer"
+                                className="text-left block rounded-xl border p-4 transition-colors hover:border-white cursor-pointer"
                                 style={{ background: "#0a1019", borderColor: "rgba(76,150,255,0.14)" }}
                             >
                                 <div className="flex items-center justify-between gap-3 mb-2">
@@ -280,7 +279,7 @@ export default function Cvess() {
                             onClick={() => goToPage(page + 1)}
                             disabled={page >= totalPages}
                             className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                            style={{ background: "rgba(0,229,255,0.08)", color: "#00e5ff" }}
+                            style={{ background: "rgba(0,229,255,0.08)", color: "white" }}
                         >
                             Next
                             <ChevronRight size={14} />
@@ -351,7 +350,6 @@ export default function Cvess() {
 
                         {/* Scrollable body */}
                         <div className="p-6 pt-4 overflow-y-auto flex flex-col gap-5">
-                            {/* Tags */}
                             {(selected.cveTags ?? []).length > 0 && (
                                 <div className="flex flex-wrap gap-1.5">
                                     {(selected.cveTags ?? []).map((t, i) => (
@@ -378,7 +376,6 @@ export default function Cvess() {
                                 <span>Last Modified: {fmtDate(selected.lastModified)}</span>
                             </div>
 
-                            {/* CVSS breakdown */}
                             {(selected.vectorString || selected.exploitabilityScore !== null) && (
                                 <div>
                                     <SectionTitle>CVSS Details</SectionTitle>
@@ -434,7 +431,6 @@ export default function Cvess() {
                                     </div>
                                 </div>
                             )}
-
                             {/* Affected Products (legacy field) */}
                             {(selected.affected ?? []).filter((a) => a.vendor !== "n/a").length > 0 && (
                                 <div>
@@ -504,7 +500,7 @@ export default function Cvess() {
                                                 href={r.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-xs truncate transition-colors hover:text-cyan-400"
+                                                className="text-xs truncate transition-colors hover:text-white"
                                                 style={{ color: "#3aa9ff" }}
                                             >
                                                 {r.url}

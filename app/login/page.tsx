@@ -6,8 +6,10 @@ import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import logo from "../../public/logo.png";
+import Image from "next/image";
 
-// ─── Theme ───────────────────────────────────────────────────────────────────
+
 const T = {
     bg: "#060608",
     card: "#0c0c0f",
@@ -15,7 +17,6 @@ const T = {
     borderFocus: "rgba(220,38,38,0.7)",
     red: "#dc2626",
     redGlow: "rgba(220,38,38,0.15)",
-    redBright: "#ef4444",
     text: "#ffffff",
     muted: "#9ca3af",
     inputBg: "rgba(255,255,255,0.03)",
@@ -102,7 +103,7 @@ function LoginForm() {
                 </label>
                 <input
                     id="login-email" name="email" type="email" required
-                    placeholder="operative@nulvex.io"
+                    placeholder="anthony@gmail.com"
                     onFocus={() => setFocused("email")}
                     onBlur={() => setFocused(null)}
                     className="w-full rounded-xl px-4 py-3 text-sm placeholder-gray-600 font-mono"
@@ -115,7 +116,7 @@ function LoginForm() {
                     <label htmlFor="login-password" className="text-xs font-semibold uppercase tracking-widest" style={{ color: T.muted }}>
                         Password
                     </label>
-                    <Link href="/forgot-password" className="text-xs transition-colors" style={{ color: T.redBright }}
+                    <Link href="/forgot-password" className="text-xs transition-colors"
                         onMouseEnter={e => { (e.target as HTMLElement).style.opacity = "0.7"; }}
                         onMouseLeave={e => { (e.target as HTMLElement).style.opacity = "1"; }}>
                         Forgot password?
@@ -132,7 +133,7 @@ function LoginForm() {
             </div>
 
             {state?.error && (
-                <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-sm" style={{ background: T.redGlow, border: `1px solid ${T.border}`, color: T.redBright }}>
+                <div className="flex items-start gap-2 px-4 py-3 rounded-xl text-sm" style={{ background: T.redGlow, border: `1px solid ${T.border}` }}>
                     <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -145,8 +146,7 @@ function LoginForm() {
                 className="w-full py-3 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                 style={{
                     background: pending ? "rgba(220,38,38,0.5)" : "linear-gradient(135deg, #dc2626, #991b1b)",
-                    color: "#fff",
-                    boxShadow: pending ? "none" : "0 0 24px rgba(220,38,38,0.4)",
+                    color: "#fff"
                 }}>
                 {pending ? (
                     <span className="flex items-center justify-center gap-2">
@@ -173,56 +173,38 @@ function LoginForm() {
 export default function LoginPage() {
     return (
         <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style={{ background: T.bg }}>
-            {/* Background */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-[0.07] blur-[120px]" style={{ background: "radial-gradient(circle, #dc2626, transparent)" }} />
                 <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.05] blur-[100px]" style={{ background: "radial-gradient(circle, #dc2626, transparent)" }} />
-                {/* Grid */}
                 <div className="absolute inset-0 opacity-[0.04]" style={{
                     backgroundImage: "linear-gradient(rgba(220,38,38,1) 1px, transparent 1px), linear-gradient(90deg, rgba(220,38,38,1) 1px, transparent 1px)",
                     backgroundSize: "60px 60px",
                 }} />
-                {/* Scan line */}
                 <div className="absolute top-0 left-0 w-full h-1" style={{ background: "linear-gradient(90deg, transparent, #dc2626, transparent)", animation: "none", opacity: 0.6 }} />
             </div>
 
             <div className="relative w-full max-w-md">
-                {/* Logo */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{ background: "linear-gradient(135deg, #1a0000, #dc2626)", border: "1px solid rgba(220,38,38,0.5)", boxShadow: "0 0 48px rgba(220,38,38,0.3)" }}>
-                        <svg className="w-8 h-8" style={{ color: "#fff" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                    </div>
-                    <h1 className="text-3xl font-black tracking-[0.2em] uppercase" style={{ color: T.text }}>
-                        NUL<span style={{ color: T.redBright }}>VEX</span>
-                    </h1>
-                    <p className="text-xs tracking-[0.3em] uppercase mt-1" style={{ color: T.muted }}>Cybersecurity Intelligence</p>
-                </div>
 
-                {/* Card */}
-                <div className="rounded-2xl p-8" style={{ background: T.card, border: `1px solid ${T.border}`, boxShadow: "0 32px 64px rgba(0,0,0,0.8), 0 0 0 1px rgba(220,38,38,0.1) inset" }}>
-                    <div className="mb-6">
-                        <p className="text-[10px] font-mono uppercase tracking-widest mb-1" style={{ color: T.redBright }}>// ACCESS_TERMINAL</p>
-                        <h2 className="text-xl font-bold" style={{ color: T.text }}>Secure Login</h2>
-                        <p className="text-sm mt-1" style={{ color: T.muted }}>Enter credentials to authenticate</p>
+                <div className="rounded-2xl p-8" style={{ background: T.card }}>
+                    <div className="flex justify-center items-center w-16 h-16 rounded-2xl mb-4 mx-auto">
+                        <Image src={logo} alt="logo" width={600} height={600} className="object-contain" />
                     </div>
-
+                    <div className="mb-6 text-center">
+                        <h2 className="text-2xl font-bold" style={{ color: T.text }}>Sign In</h2>
+                        <p className="text-xs" style={{ color: T.muted }}>Using your account to Sign In</p>
+                    </div>
                     <Suspense fallback={null}><LoginMessage /></Suspense>
                     <Suspense fallback={null}><LoginForm /></Suspense>
-
                     <p className="text-center text-sm mt-6" style={{ color: T.muted }}>
-                        No account?{" "}
-                        <Link href="/register" className="font-semibold transition-colors" style={{ color: T.redBright }}>
-                            Create one →
+                        Don't have an account?{" "}
+                        <Link href="/register" className="font-semibold transition-colors text-red-600">
+                            Sign Up
                         </Link>
                     </p>
                 </div>
 
-                <p className="text-center text-xs mt-4" style={{ color: "rgba(156,163,175,0.4)" }}>
-                    Protected by Nulvex Security © {new Date().getFullYear()}
-                </p>
-            </div>
-        </div>
+
+            </div >
+        </div >
     );
 }

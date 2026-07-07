@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 import Header from "@/components/header";
 import EditWriteupClient from "@/components/writeup/EditWriteupClient";
+import Footer from "@/components/footer/main";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -36,6 +37,11 @@ export default async function EditWriteupPage({ params }: { params: Promise<{ id
     <>
       <Header />
       <EditWriteupClient post={post} />
+      <div className="bg-black">
+        <Footer />
+
+      </div>
     </>
   );
 }
+

@@ -14,13 +14,13 @@ export default function BugBountyReporter() {
         "Modul penghapusan akun tidak melakukan validasi kepemilikan sesi (session ownership verification). Penyerang dapat memanipulasi parameter `user_id` dalam request POST untuk menghapus akun pengguna lain tanpa otoritas."
     );
     const [poc, setPoc] = useState(
-        "1. Login sebagai User A (attacker).\n2. Tangkap request saat mencoba menghapus akun sendiri menggunakan Burp Suite.\n3. Ubah parameter `user_id` dari ID User A menjadi ID User B (victim).\n4. Kirim request, akun User B akan terhapus dengan respon HTTP 200 OK."
+        "1. Login as User A (attacker).\n2. Intercept the request when trying to delete own account using Burp Suite.\n3. Change the `user_id` parameter from User A's ID to User B's ID (victim).\n4. Send the request, User B's account will be deleted with HTTP 200 OK response."
     );
     const [impact, setImpact] = useState(
         "Penyerang dapat menghapus seluruh akun pengguna di dalam sistem secara massal (mass account deletion), menyebabkan kerusakan integritas data dan gangguan layanan serius (Denial of Service) pada level pengguna."
     );
     const [remediation, setRemediation] = useState(
-        "Implementasikan kontrol akses berbasis objek (Object-Level Access Control). Pastikan server memvalidasi apakah `user_id` yang dikirimkan dalam request body cocok dengan `session.user_id` dari token JWT atau sesi pengguna aktif sebelum mengeksekusi query penghapusan."
+        "Implement Object-Level Access Control. Ensure the server validates whether the `user_id` sent in the request body matches the `session.user_id` from the JWT token or active user session before executing the deletion query."
     );
 
     const [markdownOutput, setMarkdownOutput] = useState("");

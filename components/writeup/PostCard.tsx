@@ -10,6 +10,7 @@ export interface Post {
   cover_image?: string | null;
   tags?: string[];
   author_username: string;
+  author_avatar_url?: string | null;
   read_time: number;
   views: number;
   created_at: string;
@@ -67,7 +68,6 @@ export default function PostCard({ post, isLiked = false, isLoggedIn = false }: 
         borderColor: "rgba(76,150,255,0.14)",
       }}
     >
-      {/* Cover Image */}
       {post.cover_image && (
         <div className="w-full h-44 overflow-hidden">
           <img
@@ -79,14 +79,13 @@ export default function PostCard({ post, isLiked = false, isLoggedIn = false }: 
       )}
 
       <div className="p-5">
-        {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-3">
             {post.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider"
-                style={{ background: "rgba(0,229,255,0.08)", color: "#00e5ff" }}
+                style={{ background: "rgba(0,229,255,0.08)", color: "white" }}
               >
                 <Tag size={8} />
                 {tag}
@@ -95,7 +94,6 @@ export default function PostCard({ post, isLiked = false, isLoggedIn = false }: 
           </div>
         )}
 
-        {/* Title */}
         <h2
           className="text-base font-bold leading-snug mb-3 line-clamp-2 transition-colors group-hover:text-cyan-400"
           style={{ color: "#e7edf5" }}
@@ -103,10 +101,18 @@ export default function PostCard({ post, isLiked = false, isLoggedIn = false }: 
           {post.title}
         </h2>
 
-        {/* Meta */}
         <div className="flex items-center gap-4 text-[11px]" style={{ color: "#66768a" }}>
-          <span className="flex items-center gap-1">
-            <User size={11} />
+          <span className="flex items-center gap-1.5">
+            <span
+              className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold uppercase overflow-hidden"
+              style={{ background: "rgba(0,229,255,0.1)", color: "#00e5ff" }}
+            >
+              {post.author_avatar_url ? (
+                <img src={post.author_avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                post.author_username.charAt(0)
+              )}
+            </span>
             {post.author_username}
           </span>
           <span className="flex items-center gap-1">
@@ -119,8 +125,8 @@ export default function PostCard({ post, isLiked = false, isLoggedIn = false }: 
         {/* Actions / Stats */}
         <div className="mt-4 pt-4 flex items-center justify-between border-t" style={{ borderColor: "rgba(76,150,255,0.1)" }}>
           <div className="flex items-center gap-4">
-            <button 
-              className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:text-white" 
+            <button
+              className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:text-white"
               style={{ color: liked ? "#ff4463" : "#8494a8" }}
               onClick={handleLike}
             >
@@ -136,16 +142,16 @@ export default function PostCard({ post, isLiked = false, isLoggedIn = false }: 
               <span>{post.views || 0}</span>
             </div>
           </div>
-          
-          <button 
-            className="p-1.5 rounded-md transition-colors hover:bg-white/5" 
+
+          <button
+            className="p-1.5 rounded-md transition-colors hover:bg-white/5"
             style={{ color: "#8494a8" }}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               const url = `${window.location.origin}/writeup/${post.id}`;
               if (navigator.share) {
-                navigator.share({ title: post.title, url }).catch(() => {});
+                navigator.share({ title: post.title, url }).catch(() => { });
               } else {
                 navigator.clipboard.writeText(url);
                 alert("Link copied to clipboard!");

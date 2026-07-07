@@ -71,13 +71,13 @@ async function getRdapServer(domain: string): Promise<string> {
 
     if (!bootstrapCache) {
         const res = await fetch("https://data.iana.org/rdap/dns.json");
-        if (!res.ok) throw new Error("Gagal mengambil daftar server RDAP dari IANA.");
+        if (!res.ok) throw new Error("Failed to fetch RDAP server list from IANA.");
         bootstrapCache = (await res.json()) as BootstrapService;
     }
 
     const entry = bootstrapCache.services.find(([tlds]: [string[], string[]]) => tlds.includes(tld));
     if (!entry) {
-        throw new Error(`TLD ".${tld}" belum punya server RDAP publik yang terdaftar di IANA.`);
+        throw new Error(`TLD ".${tld}" does not have a public RDAP server registered with IANA.`);
     }
 
     let server = entry[1][0];
@@ -139,7 +139,7 @@ export default function WhoisLookup() {
             const q = (target ?? query).trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
 
             if (!q) {
-                setError("Masukin nama domain dulu, misal: example.com");
+                setError("Please enter a domain name first, e.g., example.com");
                 return;
             }
             if (!isValidDomain(q)) {
@@ -158,7 +158,7 @@ export default function WhoisLookup() {
                 if (!res.ok) {
                     throw new Error(
                         res.status === 404
-                            ? "Domain tidak ditemukan / belum terdaftar."
+                            ? "Domain not found / not registered."
                             : `Registry mengembalikan error (${res.status})`
                     );
                 }
@@ -186,7 +186,7 @@ export default function WhoisLookup() {
             <div>
                 <h2 className="text-2xl font-bold text-white tracking-tight">WHOIS Lookup</h2>
                 <p className="text-xs text-gray-500 mt-1">
-                    Cari info registrasi domain — registrar, tanggal expired, status, dan nameserver.
+                    Search for domain registration info — registrar, expiration date, status, and nameservers.
                 </p>
             </div>
 
@@ -260,7 +260,7 @@ export default function WhoisLookup() {
                                 </div>
                             ) : !data ? (
                                 <div className="text-xs text-gray-600 italic text-center py-24 border border-dashed border-white/5 rounded-xl">
-                                    Masukin domain dan klik "Lookup Domain".
+                                    Enter a domain and click "Lookup Domain".
                                 </div>
                             ) : (
                                 <>

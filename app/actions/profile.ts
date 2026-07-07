@@ -49,11 +49,11 @@ export async function updateProfileInfo(prevState: ProfileState, formData: FormD
   if (authError) return { error: authError.message };
 
   // Cascade username change if it was changed
-  if (username !== currentUsername) {
+  if (username !== currentUsername || avatar_url !== user.user_metadata?.avatar_url) {
     // Note: If they have lots of posts, this is slow, but acceptable for simple projects.
     // In production, we'd normally just rely on JOINs instead of denormalizing author_username.
-    await supabase.from("writeup_posts").update({ author_username: username }).eq("author_id", user.id);
-    await supabase.from("writeup_comments").update({ author_username: username }).eq("author_id", user.id);
+    await supabase.from("writeup_posts").update({ author_username: username, author_avatar_url: avatar_url }).eq("author_id", user.id);
+    await supabase.from("writeup_comments").update({ author_username: username, author_avatar_url: avatar_url }).eq("author_id", user.id);
   }
 
   revalidatePath("/", "layout");
