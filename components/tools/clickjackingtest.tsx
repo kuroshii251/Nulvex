@@ -47,11 +47,9 @@ export default function ClickjackingTester() {
             <div>
                 <h2 className="text-2xl font-bold text-white tracking-tight">Clickjacking / UI Redressing Auditor</h2>
                 <p className="text-xs text-gray-500 mt-1">
-                    Uji apakah target endpoint mengizinkan rendering iframe (X-Frame-Options / CSP mitigation bypass test).
-                </p>
+                    Test whether the target endpoint allows iframe rendering (X-Frame-Options / CSP mitigation bypass test).                </p>
             </div>
 
-            {/* 3 Column Layout ala Cryptii */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
 
                 {/* KOLOM KIRI: PARAMETER & TARGET CONFIG */}

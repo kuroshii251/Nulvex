@@ -11,13 +11,13 @@ export default function BugBountyReporter() {
     const [cvss, setCvss] = useState("8.1 (CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N)");
 
     const [description, setDescription] = useState(
-        "Modul penghapusan akun tidak melakukan validasi kepemilikan sesi (session ownership verification). Penyerang dapat memanipulasi parameter `user_id` dalam request POST untuk menghapus akun pengguna lain tanpa otoritas."
+        "An attacker can delete entire user accounts within the system en masse (mass account deletion), causing data integrity issues and serious service disruption (Denial of Service) at the user level."
     );
     const [poc, setPoc] = useState(
         "1. Login as User A (attacker).\n2. Intercept the request when trying to delete own account using Burp Suite.\n3. Change the `user_id` parameter from User A's ID to User B's ID (victim).\n4. Send the request, User B's account will be deleted with HTTP 200 OK response."
     );
     const [impact, setImpact] = useState(
-        "Penyerang dapat menghapus seluruh akun pengguna di dalam sistem secara massal (mass account deletion), menyebabkan kerusakan integritas data dan gangguan layanan serius (Denial of Service) pada level pengguna."
+        "An attacker can delete entire user accounts within the system en masse (mass account deletion), causing data integrity issues and serious service disruption (Denial of Service) at the user level."
     );
     const [remediation, setRemediation] = useState(
         "Implement Object-Level Access Control. Ensure the server validates whether the `user_id` sent in the request body matches the `session.user_id` from the JWT token or active user session before executing the deletion query."
@@ -78,8 +78,7 @@ Reported via White Hat Triaging Assistant.`;
             <div>
                 <h2 className="text-2xl font-bold text-white tracking-tight">Bug Bounty Report Draft Generator</h2>
                 <p className="text-xs text-gray-500 mt-1">
-                    Isi detail temuan audit di bawah untuk menyusun draf laporan komprehensif dalam format Markdown standar industri.
-                </p>
+                    Fill in the audit finding details below to draft a comprehensive report in an industry-standard Markdown format.                </p>
             </div>
 
             {/* 3 Column Layout Layout */}

@@ -227,7 +227,7 @@ export default function WhoisLookup() {
                     <div className="pt-2 border-t border-white/5 space-y-1.5">
                         <label className="text-[10px] text-gray-400 font-bold uppercase">Recent Lookups</label>
                         {history.length === 0 ? (
-                            <p className="text-[10px] text-gray-600 italic">Belum ada history.</p>
+                            <p className="text-[10px] text-gray-600 italic">No history yet.</p>
                         ) : (
                             history.map((d: string) => (
                                 <button
@@ -256,8 +256,7 @@ export default function WhoisLookup() {
 
                             {loading ? (
                                 <div className="text-xs text-gray-600 italic text-center py-24 border border-dashed border-white/5 rounded-xl">
-                                    Mengambil data WHOIS...
-                                </div>
+                                    Retrieving WHOIS data...                                </div>
                             ) : !data ? (
                                 <div className="text-xs text-gray-600 italic text-center py-24 border border-dashed border-white/5 rounded-xl">
                                     Enter a domain and click "Lookup Domain".
@@ -297,10 +296,6 @@ export default function WhoisLookup() {
                                 </>
                             )}
                         </div>
-
-                        <div className="text-[10px] text-gray-500 leading-normal bg-gray-900 p-2.5 rounded-lg border border-white/5 mt-3">
-                            <span className="text-red-500 font-bold">Catatan:</span> Sebagian data registrant sengaja disamarkan (redacted) oleh registrar demi privasi (GDPR), ini normal.
-                        </div>
                     </div>
 
                     {/* DETAILED FIELDS */}
@@ -318,8 +313,7 @@ export default function WhoisLookup() {
                         <div className="flex-1 min-h-[350px] space-y-1.5 overflow-auto">
                             {!data ? (
                                 <div className="text-xs text-gray-600 italic text-center py-20 border border-dashed border-white/5 rounded-xl">
-                                    Detail field akan muncul di sini setelah lookup.
-                                </div>
+                                    The detail field will appear here after the lookup.                                </div>
                             ) : (
                                 FIELDS.map(({ key, label }) => (
                                     <div
