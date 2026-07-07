@@ -65,19 +65,12 @@ const Hero = () => (
   <section className="relative overflow-hidden py-24 px-6">
     <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center text-center">
       <h1 className="text-5xl md:text-7xl font-bold leading-tight tracking-tight text-white max-w-4xl">
-        Track every <span className="text-red-500">threat</span>
+        Track every threat <br /> Respond before it <span className="text-red-500">strikes</span>
         <br />
-        before it tracks{" "}
-        you.
-
       </h1>
 
       <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: C.muted2 }}>
-        Cydef aggregates CVEs, exploit intelligence, threat chatter, and patch
-        advisories into a single stream — helping security teams detect faster
-        and respond sooner.
-      </p>
-
+        Cydef gives researchers everything they need in one place: live CVE tracking, verified threat intelligence, security news, and a full toolkit of hashing, encoding, and lookup utilities </p>
       <div className="flex flex-wrap justify-center gap-4 mt-10">
         <a
           href="/login"
@@ -247,6 +240,10 @@ const ToolsSection = () => {
             <p className="text-[11px]" style={{ color: C.muted, fontFamily: "monospace" }}>{tool.note}</p>
           </div>
         ))}
+
+      </div>
+      <div className="flex mt-7  items-center justify-center bg-gray-900 hover:bg-gray-800 transition-colors p-2 px-6 rounded-xl mx-auto w-fit">
+        <a href="/tools" className="text-white text-center mx-auto font-semibold">View More</a>
       </div>
     </section>
   );
@@ -254,12 +251,12 @@ const ToolsSection = () => {
 
 const WhyCydef = () => {
   const items = [
-    { title: "Real-time updates", desc: "New CVEs and advisories land in the feed within seconds of disclosure." },
-    { title: "Verified sources", desc: "Every entry is cross-checked against vendor and NVD data before it's published." },
+    { title: "Real-time CVE feed", desc: "Critical and high-severity CVEs like unauthenticated RCEs and auth bypasses. Surface as soon as they're disclosed." },
+    { title: "Curated security news", desc: "Patch Tuesday roundups, zero-day alerts, and threat actor activity, tracked in one feed instead of ten different sources." },
     { title: "Free security tools", desc: "Hashing, encoding, and lookup utilities, ready to use without an account." },
-    { title: "Modern intelligence", desc: "Exploit chatter and campaign tracking layered directly onto CVE data." },
-    { title: "Developer friendly", desc: "Pull any feed programmatically through a documented REST and webhook API." },
-    { title: "Built to scale", desc: "From a solo researcher's watchlist to a SOC monitoring thousands of assets." },
+    { title: "In-depth write-ups", desc: "Deep dives and analysis on active exploits and campaigns, not just headline-level news." },
+    { title: "Built for every workflow", desc: "From a solo researcher checking CVEs in the morning to a team monitoring dozens of vendors at once." },
+    { title: "Signal, not noise", desc: "Every feature exists to cut through alert fatigue — only what security teams actually need to act on." },
   ];
 
   return (

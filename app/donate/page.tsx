@@ -54,7 +54,7 @@ export default function DonatePage() {
                     </p>
 
 
-                    <a href={TRAKTEER_URL}
+                    <a href="https://saweria.co/andy283"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex bg-red-600 items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"

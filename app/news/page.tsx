@@ -17,7 +17,7 @@ function NewsPage() {
                     <div className="mb-8 pb-6">
 
                         <h1 className="mt-2 text-3xl text-center font-bold tracking-tight text-white">
-                            News<span className="text-cyan-400">.</span>
+                            Latest News
                         </h1>
                     </div>
 

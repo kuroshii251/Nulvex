@@ -54,6 +54,9 @@ export default function ToolsSection() {
                     </div>
                 ))}
             </div>
+            <div className="flex items-center bg-red-600 p-3 rounded-xl justify-center mx-auto">
+                <a href="/tools">View More</a>
+            </div>
         </section>
     );
 }
