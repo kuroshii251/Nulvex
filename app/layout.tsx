@@ -19,11 +19,6 @@ export const metadata: Metadata = {
     template: "%s | CYDEF",
   },
   description: "CYDEF aggregates CVEs, exploit intelligence, threat chatter, and security writeups to help security teams detect and respond faster.",
-  icons: {
-    icon: [
-      { url: "/logo.png", type: "image/png", sizes: "32x32" },
-    ],
-  },
   keywords: ["cybersecurity", "threat intelligence", "CVE", "exploits", "security news", "writeups", "tools"],
   openGraph: {
     title: "CYDEF",

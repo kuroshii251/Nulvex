@@ -6,6 +6,13 @@ import { PenLine, Rss } from "lucide-react";
 import Footer from "@/components/footer/main";
 
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Write Ups",
+  description: "Browse community security writeups, CTF solutions, and vulnerability research on CYDEF.",
+};
+
 export default async function WriteupPage() {
   const supabase = await createClient();
 
