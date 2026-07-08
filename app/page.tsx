@@ -155,7 +155,7 @@ const FeedSection = () => (
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
           <ShieldAlert size={20} color={C.danger} /> Featured CVEs
         </h2>
-        <a href="#" className="text-xs font-semibold flex items-center gap-1" style={{ color: C.muted2 }}>
+        <a href="/cves" className="text-xs font-semibold flex items-center gap-1" style={{ color: C.muted2 }}>
           View all <ChevronRight size={13} />
         </a>
       </div>
