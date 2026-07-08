@@ -13,7 +13,10 @@ export default function NewWriteupPage() {
     <>
       <Header />
       <NewWriteupClient />
-      <Footer/>
+<div className="bg-black">
+<Footer/>
+</div>
+      
 
     </>
   );
